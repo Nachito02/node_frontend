@@ -1,21 +1,24 @@
-import React from 'react'
-import Layout from 'components/Layout'
+import Layout from "components/Layout";
+import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-const index = () => {
+const CrearCuenta = () => {
+  //formulario y validacion con formik y yup
 
   const formik = useFormik({
     initialValues: {
-
+      nombre: "",
       email: "",
       password: "",
     },
     validationSchema: Yup.object({
+      nombre: Yup.string().required("El nombre es obligatorio"),
       email: Yup.string()
         .email("El email no es valido")
         .required("Es obligatorio"),
 
       password: Yup.string()
+
         .required("El password no puede ir vacio")
         .min(6, "El password debe contener al menos 6 caracteres"),
     }),
@@ -27,7 +30,7 @@ const index = () => {
     <Layout>
       <div className="md:w-4/5 xl:w-3/5 mx-auto mb-10">
         <h2 className="text-4xl font-sans font-bold text-gray-800 text-center my-4">
-         Iniciar sesion
+          Crear Cuenta
         </h2>
       </div>
 
@@ -38,7 +41,30 @@ const index = () => {
             className="bg-white rounded shadow-md px-8 pt-6 pb-8 mb-4"
             action=""
           >
-           
+            <div className="mb-4">
+              <label
+                htmlFor="nombre"
+                className="block text-black text-sm mb-2 font-bold"
+              >
+                Nombre
+              </label>
+              <input
+                type="text"
+                value={formik.values.nombre}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                id="nombre"
+                placeholder="Nombre de usuario"
+                className="shadow appearance-none border-rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+              />
+
+              {formik.touched.nombre && formik.errors.nombre ? (
+                <div className="my-2 bg-gray-200 border-l-4 border-red-500 text-red-700 p-4">
+                  <p className="font-bold">Error</p>
+                  <p>{formik.errors.nombre}</p>
+                </div>
+              ) : null}
+            </div>
 
             <div className="mb-4">
               <label
@@ -90,7 +116,8 @@ const index = () => {
             </div>
 
             <input
-            value='Iniciar Sesion'
+            value='Registrarse'
+
               type="submit"
               className="bg-red-500 w-full transition-all hover:bg-gray-900 p-2 text-white uppercase font-bold"
             />
@@ -98,7 +125,7 @@ const index = () => {
         </div>
       </div>
     </Layout>
-  )
-}
+  );
+};
 
-export default index
+export default CrearCuenta;
