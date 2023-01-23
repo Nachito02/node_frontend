@@ -3,13 +3,14 @@ import React, {useContext,useEffect} from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import authContext from "context/auth/authContext";
+import Alerta from "components/Alerta";
 
 const CrearCuenta = () => {
 
     //acceder al state
 
     const AuthContext = useContext(authContext)
-    const {registrarUsuario} = AuthContext
+    const {registrarUsuario, mensaje} = AuthContext
 
 
 
@@ -42,6 +43,8 @@ const CrearCuenta = () => {
         <h2 className="text-4xl font-sans font-bold text-gray-800 text-center my-4">
           Crear Cuenta
         </h2>
+
+        {mensaje &&  <Alerta /> }
       </div>
 
       <div className="flex justify-center mt-5">

@@ -1,8 +1,17 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import Layout from 'components/Layout'
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import authContext from 'context/auth/authContext';
 const index = () => {
+
+
+  // definir context 
+
+  const AuthContext = useContext(authContext)
+
+  const {iniciarSesion, mensaje} = AuthContext;
+
 
   const formik = useFormik({
     initialValues: {
@@ -19,8 +28,8 @@ const index = () => {
         .required("El password no puede ir vacio")
         .min(6, "El password debe contener al menos 6 caracteres"),
     }),
-    onSubmit: () => {
-      console.log("enviando form");
+    onSubmit: (valores) => {
+      iniciarSesion(valores)
     },
   });
   return (
