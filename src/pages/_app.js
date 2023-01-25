@@ -11,7 +11,6 @@ const myApp = ({Component, pageProps}) => {
     
 
     </AuthState>
-
   )
 
 }

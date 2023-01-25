@@ -1,8 +1,10 @@
-import React, {useContext} from 'react'
+import React, {useContext,useEffect} from 'react'
 import Layout from 'components/Layout'
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import authContext from 'context/auth/authContext';
+import Alerta from 'components/Alerta';
+import {useRouter} from 'next/router';
 const index = () => {
 
 
@@ -10,7 +12,15 @@ const index = () => {
 
   const AuthContext = useContext(authContext)
 
-  const {iniciarSesion, mensaje} = AuthContext;
+  const {iniciarSesion, mensaje, autenticado} = AuthContext;
+
+  const router = useRouter()
+
+  useEffect(() => {
+    if(autenticado) {
+      router.push('/')
+    }
+  }, [autenticado])
 
 
   const formik = useFormik({
@@ -35,6 +45,7 @@ const index = () => {
   return (
     <Layout>
       <div className="md:w-4/5 xl:w-3/5 mx-auto mb-10">
+        {mensaje && <Alerta /> }
         <h2 className="text-4xl font-sans font-bold text-gray-800 text-center my-4">
          Iniciar sesion
         </h2>

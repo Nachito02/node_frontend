@@ -5,15 +5,19 @@ import {
     REGISTRO_ERROR,
     REGISTRO_EXITOSO,
     USUARIO_AUTENTICADO,
-    LIMPIAR_ALERTA
+    LIMPIAR_ALERTA,
+    LOGIN_ERROR,
+    LOGIN_EXITOSO,
+    CERRAR_SESION
 } from "types";
-import clienteAxios from "config/axios";
 
+import clienteAxios from "config/axios";
+import tokenAuth from "config/tokenAuth";
 
 const AuthState = ({ children }) => {
     //definir un state inciial
     const initialState = {
-        token: '',
+        token: typeof window !== 'undefined' ? localStorage.getItem('token'): '',
         autenticado: null,
         usuario: null,
         mensaje: null,
@@ -50,19 +54,63 @@ const AuthState = ({ children }) => {
 
 
     //autenticar usuarios
-    const iniciarSesion = async () => {
+    const iniciarSesion = async (datos) => {
         
+        try {
+            const respuesta = await clienteAxios.post('/api/auth',datos)
+            dispatch({
+                type: LOGIN_EXITOSO,
+                payload: respuesta.data.token
+            })
+        } catch (error) {
+            dispatch({
+                type: LOGIN_ERROR,
+                payload: error.response.data.msg
+            })
+        }
+
+         //LIMPIAR ALERTA DESPUES DE 3SEGUNDOS
+         setTimeout(()=> {
+            dispatch({
+                type: LIMPIAR_ALERTA
+            })
+        }, 3000 )
     }
 
 
-    //usuario autenticado
+    //retorne el usuario autenticado segun token
 
-    const usuarioAutenticado = nombre => {
+    const usuarioAutenticado = async () => {
+        const token = localStorage.getItem('token')
+        if(token) {
+            tokenAuth(token)
+        }  
+            try {
+                const respuesta = await clienteAxios.get('/api/auth')
+               
+                if(respuesta.data.usuario) {
+                    dispatch({
+                        type: USUARIO_AUTENTICADO,
+                        payload:respuesta.data.usuario,
+                     
+                    })
+                }
+
+            } catch (error) {
+                console.log(error)
+            }
+    }
+
+
+    //cerrar la sesion 
+
+    const cerrarSesion = () => {
         dispatch({
-            type: USUARIO_AUTENTICADO,
-            payload: nombre
+            type:CERRAR_SESION
         })
     }
+
+  
 
     return (
         <authContext.Provider
@@ -73,7 +121,8 @@ const AuthState = ({ children }) => {
                 mensaje: state.mensaje,
                 usuarioAutenticado,
                 registrarUsuario,
-                iniciarSesion
+                iniciarSesion,
+                cerrarSesion
 
             }}
         >
