@@ -55,7 +55,6 @@ const AuthState = ({ children }) => {
 
     //autenticar usuarios
     const iniciarSesion = async (datos) => {
-        
         try {
             const respuesta = await clienteAxios.post('/api/auth',datos)
             dispatch({
@@ -87,7 +86,7 @@ const AuthState = ({ children }) => {
         }  
             try {
                 const respuesta = await clienteAxios.get('/api/auth')
-               
+                console.log(respuesta)
                 if(respuesta.data.usuario) {
                     dispatch({
                         type: USUARIO_AUTENTICADO,
