@@ -2,10 +2,20 @@ import React, { useCallback, useContext } from "react";
 import { useDropzone } from "react-dropzone";
 import clienteAxios from "config/axios";
 import appContext from "context/app/appContext";
+import authContext from "context/auth/authContext";
+import Formulario from "./Formulario";
 const Dropzone = () => {
+
+  //context app
   const AppContext = useContext(appContext);
 
   const { mostrarAlerta, subirArchivos, cargando, crearEnlace } = AppContext;
+
+  //context auth
+
+  const AuthContext = useContext(authContext);
+
+  const { usuario, autenticado } = AuthContext;
 
   const onDropRejected = () => {
     mostrarAlerta(
@@ -18,7 +28,7 @@ const Dropzone = () => {
     const formData = new FormData();
     formData.append("archivo", acceptedFiles[0]);
 
-    subirArchivos(formData);
+    subirArchivos(formData, acceptedFiles[0].path);
   }, []);
 
   //Extraer contenido de dropzone
@@ -38,8 +48,6 @@ const Dropzone = () => {
     </li>
   ));
 
-
-
   return (
     <div className="md:flex-1 mb-3 mx-2 mt-16 lg:mt-0 flex flex-col items-center justify-center border-dashed border-gray-400 border-2 bg-gray-100 px-4">
       {acceptedFiles.length > 0 ? (
@@ -47,13 +55,17 @@ const Dropzone = () => {
           <h4 className="text-2xl font-bold text-center mb-4">Archivos</h4>
           <ul>{archivos}</ul>
 
+            {autenticado ? <Formulario /> : null}
+
           {cargando ? (
-            <p className="my-10 text-center text-gray-600 ">Subiendo archivo...</p>
+            <p className="my-10 text-center text-gray-600 ">
+              Subiendo archivo...
+            </p>
           ) : (
             <button
               className="bg-blue-700 w-full py-3 rounded-lg text-white my-10 hover:bg-blue-800"
               type="button"
-              onClick={crearEnlace}
+              onClick={() => crearEnlace()}
             >
               Crear enlace
             </button>

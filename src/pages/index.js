@@ -1,58 +1,85 @@
-import React, {useContext,useEffect} from 'react'
-import Layout from 'components/Layout'
-import authContext from 'context/auth/authContext'
-import appContext from 'context/app/appContext'
-import Link from 'next/link'
-import Dropzone from 'components/Dropzone'
-import Alerta from 'components/Alerta'
-
+import React, { useContext, useEffect } from "react";
+import Layout from "components/Layout";
+import authContext from "context/auth/authContext";
+import appContext from "context/app/appContext";
+import Link from "next/link";
+import Dropzone from "components/Dropzone";
+import Alerta from "components/Alerta";
 
 const index = () => {
-
   //extraer el usuario autenticado del storage
-  const AuthContext = useContext(authContext)
+  const AuthContext = useContext(authContext);
 
-  const {usuarioAutenticado} = AuthContext
-    
+  const { usuarioAutenticado } = AuthContext;
+
   //extraer el mensaje de error del archivo
-  
-  const AppContext = useContext(appContext)
 
-  const {mensaje_archivo} = AppContext
+  const AppContext = useContext(appContext);
+
+  const { mensaje_archivo, url } = AppContext;
+
 
   //usuario autenticado
-    useEffect(() => {
-      usuarioAutenticado()
-    },[])
-    
+  useEffect(() => {
+      const token = localStorage.getItem('token')
+
+      if(token) {
+        usuarioAutenticado();
+
+      }
+  }, []);
 
   return (
-    <Layout> 
+    <Layout>
+      <div className="md:w-4/5 xl:w-3/5 mx-auto mb-32">
+        {url ? (
+          <>
+            <p className="text-center text-2xl mt-10">
+              <span className="font-bold text-red-700 text-4xl uppercase ">
+                Tu url es :
+              </span>
+              {`${process.env.frontendURL}/enlaces/${url}`}
+            </p>
 
-      <div className='md:w-4/5 xl:w-3/5 mx-auto mb-32'>
+            <button
+              type="submit"
+              className="bg-red-500 w-full transition-all hover:bg-gray-900 p-2 text-white uppercase font-bold mt-10"
+              onClick={() => navigator.clipboard.writeText(`${process.env.frontendURL}/enlaces/${url}`) }
+            >  Copiar enlace</button>
+          </>
+        ) : (
+          <>
+            {mensaje_archivo && <Alerta />}
 
-      {mensaje_archivo && <Alerta />}
+            <div className="lg:flex md:shadow-lg p-5 bg-white rounded-lg py-10">
+              <Dropzone />
 
-        <div className='lg:flex md:shadow-lg p-5 bg-white rounded-lg py-10'>
-               <Dropzone />
-       
-            <div className='md:flex-1 mb-3 mx-2 mt-16 lg:mt-0'>
+              <div className="md:flex-1 mb-3 mx-2 mt-16 lg:mt-0">
+                <h2 className="text-4xl font-sans font-bold text-gray-800 my-4">
+                  Compartir Archivos de forma sencilla y privada
+                </h2>
 
-             <h2 className='text-4xl font-sans font-bold text-gray-800 my-4'>Compartir Archivos de forma sencilla y privada</h2>
+                <p className="text-lg leading-loose">
+                  <span className="text-red-500 font-bold">
+                    {" "}
+                    ReactNodeSend{" "}
+                  </span>{" "}
+                  te permite compartir archivos con cifrado de extremo a extremo
+                </p>
 
-             <p className='text-lg leading-loose'>
-              <span className='text-red-500 font-bold'> ReactNodeSend </span> te permite compartir archivos con cifrado de extremo a extremo
-             </p>
-
-              <Link className='text-red-500 font-bold-lg text-lg hover:text-red-700' href='/crearcuenta'>
+                <Link
+                  className="text-red-500 font-bold-lg text-lg hover:text-red-700"
+                  href="/crearcuenta"
+                >
                   Crea una cuenta para mayores beneficios
-              </Link>
-          </div>
-        </div>
+                </Link>
+              </div>
+            </div>
+          </>
+        )}
       </div>
-      
     </Layout>
-  )
-}
+  );
+};
 
-export default index
+export default index;
