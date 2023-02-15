@@ -8,8 +8,8 @@
 
 module.exports = {
   env: {
-    backendURL: 'http://localhost:4000',
-    frontendURL: 'http://localhost:3000'
+    backendURL: 'https://nodesendbackend-production.up.railway.app/',
+    frontendURL: 'https://node-frontend.vercel.app/'
   }
 }
 
