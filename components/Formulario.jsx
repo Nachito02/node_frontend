@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import appContext from "context/app/appContext";
 
 const Formulario = () => {
+
+  const AppContext = useContext(appContext);
+
+  const { agregarPassword,agregarDescargas } = AppContext;
+
   const [tienePassword, setTienePassword] = useState(false);
   return (
     <div className="w-full mt-20">
@@ -9,7 +15,9 @@ const Formulario = () => {
           Eliminar tras:
         </label>
 
-        <select className="appearance-none w-full mt-2 bg-white border-gray-400 text-black py-3 px-4 pr-8 rounded leading-none focus:outline-none focus:border-gray-500">
+        <select 
+          onChange={e => agregarDescargas(parseInt(e.target.value))}
+        className="appearance-none w-full mt-2 bg-white border-gray-400 text-black py-3 px-4 pr-8 rounded leading-none focus:outline-none focus:border-gray-500">
           <option value="none" defaultValue={true}>
             --Selecciona--
           </option>
@@ -29,6 +37,7 @@ const Formulario = () => {
         </div>
         {tienePassword ? (
           <input
+              onChange={ e=> {agregarPassword(e.target.value)}}
             type="password"
             className="appearance-none w-full mt-2 bg-white border border-gray-400 text-black py-3 px-4 pr-8  rounded leading-none focus:outline-none focus:border-gray-500"
           />

@@ -7,7 +7,9 @@ import {
   SUBIR_ARCHIVOS_ERROR,
   CREAR_ENLACE_ERROR,
   CREAR_ENLACE_EXITO,
-  LIMPIAR_STATE
+  LIMPIAR_STATE,
+  AGREGAR_PASSWORD,
+  AGREGAR_DESCARGAS
 } from "types";
 import appContext from "./appContext";
 import appReducer from "./appReducer";
@@ -87,7 +89,7 @@ const AppState = ({ children }) => {
         payload: resultado.data.msg,
       });
     } catch (error) {
-      console.log(error);
+        (error);
     }
   };
 
@@ -99,6 +101,26 @@ const AppState = ({ children }) => {
         type: LIMPIAR_STATE,
 
     })
+  }
+
+  //funcion que agrega el password
+
+  const agregarPassword = password => {
+    dispatch({
+        type:AGREGAR_PASSWORD,
+        payload: password
+    })
+} 
+
+
+  //agrega un numero de descarg 
+
+
+  const agregarDescargas = (descargas) => { 
+        dispatch({
+          type: AGREGAR_DESCARGAS,
+          paylod: descargas
+        })
   }
 
   return (
@@ -117,7 +139,9 @@ const AppState = ({ children }) => {
         autor: state.autor,
         url: state.url,
 
-        limpiarState
+        limpiarState,
+        agregarPassword,
+        agregarDescargas
       }}
     >
       {children}
